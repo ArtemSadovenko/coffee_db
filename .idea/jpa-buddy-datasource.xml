@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="JpbDataSourceConfig">
+    <data-sources>
+      <data-source id="495a28c3-a491-4fa7-9281-9d88ebf304a5" name="coffee_db" url="jdbc:mysql://localhost/coffee_shop?useSSL=false&amp;allowMultiQueries=true&amp;serverTimezone=UTC" driverClass="com.mysql.cj.jdbc.Driver" />
+      <data-source id="ac793693-90bc-4600-998b-7d4887691e09" name="coffee_db_new" url="jdbc:mysql://localhost/coffee_shop?useSSL=false&amp;allowMultiQueries=true&amp;serverTimezone=UTC" driverClass="com.mysql.cj.jdbc.Driver" />
+    </data-sources>
+  </component>
+</project>

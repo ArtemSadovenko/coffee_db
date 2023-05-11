@@ -5,9 +5,9 @@ import coffee.Entity.CustomPair;
 import coffee.Entity.Topping;
 import coffee.Entity.User;
 import coffee.Entity.enums.UserRole;
-import coffee.Repository.CoffeeRepo;
-import coffee.Repository.ToppingRepo;
-import coffee.Repository.UserRepo;
+import coffee.Repository.RepoCoffee;
+import coffee.Repository.RepoTopping;
+import coffee.Repository.RepoUser;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -18,84 +18,73 @@ import java.util.Map;
 @RequestMapping("/api/user")
 public class UserResource {
     @Autowired
-    private CoffeeRepo coffeeRepo;
+    private RepoCoffee coffeeRepo;
     @Autowired
-    private ToppingRepo toppingRepo;
+    private RepoUser userRepo;
     @Autowired
-    private UserRepo userRepo;
+    private RepoTopping toppingRepo;
 
     @PostMapping("/add")
     public void add(@RequestBody User user){
-        userRepo.add(user);
+        userRepo.save(user);
     }
 
     @GetMapping("/all")
     public List<User> getAll(){
-        return userRepo.getAll();
+        return userRepo.findAll();
     }
 
     @GetMapping("/{id}")
     public User findById(@PathVariable long id){
-        return userRepo.findById(id);
+        return userRepo.findById(id).get();
     }
 
     @PutMapping("/{id}")
     public void update(@RequestBody User user, @PathVariable long id){
         user.setId(id);
-        userRepo.update(user);
+        userRepo.save(user);
     }
 
     @DeleteMapping("/{id}")
     public void del(@PathVariable long id){
-        userRepo.del(id);
+        userRepo.deleteById(id);
     }
 
-//    @PostMapping("/{userId}/coffee/{coffeeId}")
-//    public void buyCoffee(@PathVariable long userId, @PathVariable long coffeeId){
-//        userRepo.buyCoffee(userId, coffeeRepo.findById(coffeeId));
+
+//    @PostMapping("/{userId}/coffee/")
+//    public void buyCoffee(@PathVariable long userId, @RequestBody Coffee coffee){
+//        coffeeRepo.min(coffee);
+//        userRepo.buyCoffee(userId, coffee);
 //    }
-
-    @PostMapping("/{userId}/coffee/")
-    public void buyCoffee(@PathVariable long userId, @RequestBody Coffee coffee){
-        coffeeRepo.min(coffee);
-        userRepo.buyCoffee(userId, coffee);
-    }
-
-//    @PostMapping("/{userId}/topping/{toppingId}")
-//    public void buyTopping(@PathVariable long userId,@PathVariable long toppingId){
-//        userRepo.buyTopping(userId, toppingRepo.findById(toppingId));
+//
+//
+//    @PostMapping("/{userId}/topping/")
+//    public void buyTopping(@PathVariable long userId,@RequestBody Topping topping){
+//        toppingRepo.min(topping);
+//        userRepo.buyTopping(userId, topping);
 //    }
-
-    @PostMapping("/{userId}/topping/")
-    public void buyTopping(@PathVariable long userId,@RequestBody Topping topping){
-        toppingRepo.min(topping);
-        userRepo.buyTopping(userId, topping);
-    }
-
-    @GetMapping("/{id}/bill")
-    public CustomPair bill(@PathVariable long id){
-        User user = userRepo.findById(id);
-        CustomPair customPair = new CustomPair(user.getCoffeeBill(), user.getToppingBill());
-        return customPair;
-    }
+//
+//    @GetMapping("/{id}/bill")
+//    public CustomPair bill(@PathVariable long id){
+//        User user = userRepo.findById(id);
+//        CustomPair customPair = new CustomPair(user.getCoffeeBill(), user.getToppingBill());
+//        return customPair;
+//    }
 
     @PostMapping("/{id}/upCoffee")
     public void upCoffee(@RequestBody Coffee coffee, @PathVariable long id){
-        if(userRepo.findById(id).getUserRole().equals(UserRole.ADMIN)){
-            coffeeRepo.update(coffee);
+        if(userRepo.findById(id).get().getUserRole().equals(UserRole.ADMIN)){
+//            coffeeRepo.update(coffee);
+            coffeeRepo.save(coffee);
         }
     }
 
     @PostMapping("/{id}/upTopping")
     public void upTopping(@RequestBody Topping coffee, @PathVariable long id){
-        if(userRepo.findById(id).getUserRole().equals(UserRole.ADMIN)){
-            toppingRepo.update(coffee);
+        if(userRepo.findById(id).get().getUserRole().equals(UserRole.ADMIN)){
+            toppingRepo.save(coffee);
         }
     }
 
-    @GetMapping("/test")
-    public User tt(){
-        User user = new User(1,"m", UserRole.CONSUMER, null, null);
-        return user;
-    }
+
 }
